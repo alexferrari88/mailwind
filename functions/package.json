@@ -1,0 +1,23 @@
+{
+  "name": "mailwind-functions",
+  "version": "0.0.1",
+  "description": "Convert HTML written with Tailwind CSS to HTML with inline styles",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "prestart": "npm run build",
+    "start": "func start",
+    "test": "echo \"No tests yet...\""
+  },
+  "author": "Alex Ferrari",
+  "dependencies": {
+    "juice": "8.1.0",
+    "tailwindcss": "3.2.2",
+    "yargs": "17.6.2"
+  },
+  "devDependencies": {
+    "@azure/functions": "^3.0.0",
+    "@types/node": "16.x",
+    "typescript": "^4.0.0"
+  }
+}

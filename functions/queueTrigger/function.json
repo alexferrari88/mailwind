@@ -1,0 +1,26 @@
+{
+  "bindings": [
+    {
+      "name": "queueItem",
+      "type": "queueTrigger",
+      "direction": "in",
+      "queueName": "rendered-html",
+      "connection": "AzureWebJobsStorage"
+    },
+    {
+      "name": "renderedBlob",
+      "type": "blob",
+      "path": "html/{batchId}.html",
+      "direction": "out",
+      "connection": "AzureWebJobsStorage"
+    },
+    {
+     "name": "emailBlob",
+     "type": "blob",
+     "path": "html/{batchId}_email.html",
+     "direction": "out",
+     "connection": "AzureWebJobsStorage"
+    }
+  ],
+  "scriptFile": "../dist/queueTrigger/index.js"
+}
