@@ -40,25 +40,21 @@ function exec(
   });
 }
 
+function injectCSS(html: string, css: string): string {
+  return html.replace(
+    "</head>",
+    `<style type="text/css">${css}</style></head>`
+  );
+}
+
 function inlineCSS(html: string, css: string): string {
   return juice.inlineContent(html, css);
 }
 
-const setUpTmpDir = (): string => {
+function setUpTmpDir(): string {
   const appPrefix = "mailwind";
-
   return fs.mkdtempSync(path.join(os.tmpdir(), appPrefix));
-
-  // try {
-  //   if (tmpDir) {
-  //     fs.rmSync(tmpDir, { recursive: true });
-  //   }
-  // } catch (e) {
-  //   console.error(
-  //     `An error has occurred while removing the temp folder at ${tmpDir}. Please remove it manually. Error: ${e}`
-  //   );
-  // }
-};
+}
 
 const queueTrigger: AzureFunction = async function (
   context: Context,
@@ -71,7 +67,7 @@ const queueTrigger: AzureFunction = async function (
   const tmpDir = setUpTmpDir();
   const inputHtmlPath = path.join(tmpDir, "input.html");
   fs.writeFileSync(inputHtmlPath, inputHTML);
-  context.log(`### Input HTML written to ${inputHtmlPath}`);
+  context.log(`Input HTML written to ${inputHtmlPath}`);
 
   const tailwindcss_path = path.resolve(
     __dirname,
@@ -85,7 +81,7 @@ const queueTrigger: AzureFunction = async function (
   const outputCssPath = path.resolve(os.tmpdir(), "mailwind.css");
   //   const outputHtmlPath = path.join(tmpDir, "output.html");
 
-  context.log("### Running tailwindcss");
+  context.log("Running tailwindcss");
   const result = await exec("node", [
     tailwindcss_path,
     "--config",
@@ -99,23 +95,22 @@ const queueTrigger: AzureFunction = async function (
   ]);
 
   if (result.exit_code !== 0) {
-    context.log("###Failed to run Tailwind.");
+    context.log("Failed to run Tailwind.");
     context.log(result.stderr);
     return;
   }
 
-  //   if (outputHtmlPath) {
   const outputCss = fs.readFileSync(outputCssPath).toString();
 
   const inlinedHTML = inlineCSS(inputHTML, outputCss);
 
-  context.log("### InputHTML", inputHTML);
-
-  // fs.writeFileSync(outputHtmlPath, inlinedHTML);
-
   context.bindings.renderedBlob = inputHTML;
   context.bindings.emailBlob = inlinedHTML;
-  //   }
+
+  // cleanup
+  if (tmpDir) {
+    fs.rmSync(tmpDir, { recursive: true });
+  }
 };
 
 export default queueTrigger;
