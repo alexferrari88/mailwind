@@ -17,9 +17,16 @@
     {
      "name": "emailBlob",
      "type": "blob",
-     "path": "html/{issueId}_email.html",
+     "path": "emails/latest.html",
      "direction": "out",
      "connection": "AzureWebJobsStorage"
+    },
+    {
+      "name": "outQueue",
+      "type": "queue",
+      "queueName": "ready-to-send",
+      "direction": "out",
+      "connection": "AzureWebJobsStorage"
     }
   ],
   "scriptFile": "../dist/queueTrigger/index.js"

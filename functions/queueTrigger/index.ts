@@ -102,10 +102,11 @@ const queueTrigger: AzureFunction = async function (
 
   const outputCss = fs.readFileSync(outputCssPath).toString();
 
-  const inlinedHTML = inlineCSS(inputHTML, outputCss);
+  const inlinedHTML = injectCSS(inputHTML, outputCss);
 
   context.bindings.renderedBlob = inputHTML;
   context.bindings.emailBlob = inlinedHTML;
+  context.bindings.outQueue = issueId;
 
   // cleanup
   if (tmpDir) {
