@@ -58,10 +58,10 @@ function setUpTmpDir(): string {
 
 const queueTrigger: AzureFunction = async function (
   context: Context,
-  data: { batchId: number; inputHTML: string }
+  data: { issueId: number; inputHTML: string }
 ): Promise<void> {
-  const { batchId, inputHTML } = data;
-  if (!batchId || !inputHTML) {
+  const { issueId, inputHTML } = data;
+  if (!issueId || !inputHTML) {
     throw new Error("Invalid input");
   }
   const tmpDir = setUpTmpDir();

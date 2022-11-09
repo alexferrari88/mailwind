@@ -10,14 +10,14 @@
     {
       "name": "renderedBlob",
       "type": "blob",
-      "path": "html/{batchId}.html",
+      "path": "html/{issueId}.html",
       "direction": "out",
       "connection": "AzureWebJobsStorage"
     },
     {
      "name": "emailBlob",
      "type": "blob",
-     "path": "html/{batchId}_email.html",
+     "path": "html/{issueId}_email.html",
      "direction": "out",
      "connection": "AzureWebJobsStorage"
     }
