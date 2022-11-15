@@ -58,11 +58,15 @@ function setUpTmpDir(): string {
 
 const queueTrigger: AzureFunction = async function (
   context: Context,
-  data: { issueId: number; inputHTML: string }
+  data: { issueId: number; inputHTML: string; isEmail: boolean }
 ): Promise<void> {
-  const { issueId, inputHTML } = data;
+  const { issueId, inputHTML, isEmail } = data;
   if (!issueId || !inputHTML) {
     throw new Error("Invalid input");
+  }
+  if (isEmail === false) {
+    context.bindings.renderedBlob = inputHTML;
+    return;
   }
   const tmpDir = setUpTmpDir();
   const inputHtmlPath = path.join(tmpDir, "input.html");
@@ -104,7 +108,6 @@ const queueTrigger: AzureFunction = async function (
 
   const inlinedHTML = injectCSS(inputHTML, outputCss);
 
-  context.bindings.renderedBlob = inputHTML;
   context.bindings.emailBlob = inlinedHTML;
   context.bindings.outQueue = issueId;
 
